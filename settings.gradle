@@ -1,1 +1,4 @@
-rootProject.name = 'connect-platform'
+include 'api-gateway'
+include 'member-service'
+include 'payment-service'
+include 'matching-service'
