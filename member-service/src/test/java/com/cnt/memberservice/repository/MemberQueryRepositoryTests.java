@@ -28,7 +28,6 @@ class MemberQueryRepositoryTests {
     static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0")
         .withDatabaseName("connect_platform")
         .withUsername("root")
-        .withPassword("1234")
         .withReuse(false);
 
     @Autowired
@@ -41,7 +40,6 @@ class MemberQueryRepositoryTests {
     static void overrideProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.datasource.url", mysql::getJdbcUrl);
         registry.add("spring.datasource.username", mysql::getUsername);
-        registry.add("spring.datasource.password", mysql::getPassword);
         registry.add("spring.datasource.driver-class-name", mysql::getDriverClassName);
     }
 
