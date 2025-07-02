@@ -32,9 +32,9 @@ jobs:
       - name: Run Unit test
         run: |
           ./gradlew --info api-gateway:test
+          ./gradlew --info member-service:test
           ./gradlew --info payment-service:test
           ./gradlew --info matching-service:test
-#          ./gradlew --info member-service:test
 
 #      todo 단위테스트와 통합테스트 분리 실행
 #      - name: Run integration tests
