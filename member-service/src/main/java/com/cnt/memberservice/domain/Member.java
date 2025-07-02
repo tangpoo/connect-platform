@@ -32,7 +32,7 @@ public class Member {
         this.viewCount = 0;
     }
 
-    public void increaseViewCount() {
-        this.viewCount++;
+    public void increaseViewCount(Long count) {
+        this.viewCount += count;
     }
 }

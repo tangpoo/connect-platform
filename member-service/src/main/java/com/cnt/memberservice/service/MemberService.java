@@ -8,14 +8,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class MemberService {
 
-    private final MemberRepository memberRepository;
     private final MemberQueryRepository memberQueryRepository;
+    private final RedisTemplate<String, Long> redisTemplate;
+
+    private static final String VIEW_COUNT_PREFIX = "profile:viewcount:";
 
     public Page<MemberDto> getMember(String sortBy, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -23,9 +26,7 @@ public class MemberService {
     }
 
     public void increaseViewCount(Long id) {
-        Member member = memberRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Member not found."));
-        member.increaseViewCount();
-        memberRepository.save(member);
+        String key = VIEW_COUNT_PREFIX + id;
+        redisTemplate.opsForValue().increment(key);
     }
 }
