@@ -1,4 +1,4 @@
-package com.cnt.memberservice.domain;
+package com.cnt.paymentservice.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
