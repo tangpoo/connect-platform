@@ -26,7 +26,9 @@ public class ViewCountSyncScheduler {
     @Scheduled(fixedRate = 1000 * 60)
     public void syncViewCountsToDatabase() {
         Map<Long, Long> viewCounts = getViewCountMapFromRedis();
-        if (viewCounts.isEmpty()) return;
+        if (viewCounts.isEmpty()) {
+            return;
+        }
 
         List<Member> updatedMembers = applyViewCountToMembers(viewCounts);
         persistAndClear(updatedMembers, viewCounts.keySet());
@@ -34,7 +36,9 @@ public class ViewCountSyncScheduler {
 
     private Map<Long, Long> getViewCountMapFromRedis() {
         Set<String> keys = redisTemplate.keys(VIEW_COUNT_PREFIX + "*");
-        if (keys == null || keys.isEmpty()) return Collections.emptyMap();
+        if (keys == null || keys.isEmpty()) {
+            return Collections.emptyMap();
+        }
 
         Map<Long, Long> viewCounts = new HashMap<>();
         for (String key : keys) {
