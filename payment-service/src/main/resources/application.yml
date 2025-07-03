@@ -18,4 +18,4 @@ spring:
 
 payments:
   toss:
-    test_secret_api_key : "testKey..."
+    test_secret_api_key: "testKey..."
