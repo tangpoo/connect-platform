@@ -13,6 +13,7 @@ import com.cnt.paymentservice.dto.PaymentRes;
 import com.cnt.paymentservice.dto.TossPaymentRes;
 import com.cnt.paymentservice.repository.MemberRepository;
 import com.cnt.paymentservice.repository.PaymentRepository;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -62,7 +63,7 @@ class PaymentServiceTests {
         given(memberRepository.findById(memberId)).willReturn(Optional.empty());
 
         assertThatThrownBy(() -> paymentService.confirmPayment(req))
-            .isInstanceOf(IllegalArgumentException.class)
+            .isInstanceOf(EntityNotFoundException.class)
             .hasMessageContaining("회원이 존재하지 않습니다.");
     }
 

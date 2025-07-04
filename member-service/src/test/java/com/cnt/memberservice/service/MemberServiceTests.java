@@ -5,8 +5,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.cnt.memberservice.domain.Member;
 import com.cnt.memberservice.dto.MemberDto;
 import com.cnt.memberservice.repository.MemberQueryRepository;
+import com.cnt.memberservice.repository.MemberRepository;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +27,9 @@ class MemberServiceTests {
 
     @Mock
     private MemberQueryRepository memberQueryRepository;
+
+    @Mock
+    private MemberRepository memberRepository;
 
     @Mock
     private RedisTemplate<String, Long> redisTemplate;
@@ -52,6 +57,7 @@ class MemberServiceTests {
         // given
         Long id = 1L;
         ValueOperations<String, Long> ops = mock(ValueOperations.class);
+        when(memberRepository.existsById(id)).thenReturn(true);
         when(redisTemplate.opsForValue()).thenReturn(ops);
 
         // when
