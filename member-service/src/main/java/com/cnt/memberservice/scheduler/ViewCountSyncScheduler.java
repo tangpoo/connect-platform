@@ -25,13 +25,18 @@ public class ViewCountSyncScheduler {
 
     @Scheduled(fixedRate = 1000 * 60)
     public void syncViewCountsToDatabase() {
-        Map<Long, Long> viewCounts = getViewCountMapFromRedis();
-        if (viewCounts.isEmpty()) {
-            return;
-        }
+        try {
+            Map<Long, Long> viewCounts = getViewCountMapFromRedis();
+            if (viewCounts.isEmpty()) {
+                return;
+            }
 
-        List<Member> updatedMembers = applyViewCountToMembers(viewCounts);
-        persistAndClear(updatedMembers, viewCounts.keySet());
+            List<Member> updatedMembers = applyViewCountToMembers(viewCounts);
+            persistAndClear(updatedMembers, viewCounts.keySet());
+
+        } catch (Exception e) {
+            log.error("뷰 카운트 동기화 중 예외 발생", e);
+        }
     }
 
     private Map<Long, Long> getViewCountMapFromRedis() {
@@ -42,10 +47,14 @@ public class ViewCountSyncScheduler {
 
         Map<Long, Long> viewCounts = new HashMap<>();
         for (String key : keys) {
-            Long profileId = Long.valueOf(key.replace(VIEW_COUNT_PREFIX, ""));
-            Long count = redisTemplate.opsForValue().get(key);
-            if (count != null) {
-                viewCounts.put(profileId, count);
+            try {
+                Long profileId = Long.valueOf(key.replace(VIEW_COUNT_PREFIX, ""));
+                Long count = redisTemplate.opsForValue().get(key);
+                if (count != null) {
+                    viewCounts.put(profileId, count);
+                }
+            } catch (NumberFormatException e) {
+                log.warn("잘못된 형식의 view count key: {}", key);
             }
         }
         return viewCounts;
@@ -53,6 +62,7 @@ public class ViewCountSyncScheduler {
 
     private List<Member> applyViewCountToMembers(Map<Long, Long> viewCounts) {
         List<Member> members = memberRepository.findAllById(viewCounts.keySet());
+
         for (Member member : members) {
             Long increment = viewCounts.get(member.getId());
             if (increment != null) {

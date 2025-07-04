@@ -8,6 +8,7 @@ import com.cnt.paymentservice.dto.TossConfirmReq;
 import com.cnt.paymentservice.dto.TossPaymentRes;
 import com.cnt.paymentservice.repository.MemberRepository;
 import com.cnt.paymentservice.repository.PaymentRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +36,7 @@ public class PaymentService {
 
     private Member getMember(Long memberId) {
         return memberRepository.findById(memberId)
-            .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+            .orElseThrow(() -> new EntityNotFoundException("회원이 존재하지 않습니다."));
     }
 
     private void validateTossResponse(TossPaymentRes res, int expectedAmount) {
