@@ -7,6 +7,7 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -40,10 +41,9 @@ public class MemberQueryRepository {
             .limit(pageable.getPageSize())
             .fetch();
 
-        long count = queryFactory
-            .select(member.count())
-            .from(member)
-            .fetchOne();
+        long count = Optional.ofNullable(
+            queryFactory.select(member.count()).from(member).fetchOne()
+        ).orElse(0L);
 
         return new PageImpl<>(content, pageable, count);
     }
