@@ -19,3 +19,5 @@ spring:
 payments:
   toss:
     test_secret_api_key: "testKey..."
+  kakao:
+    admin_key: "testKey..."
