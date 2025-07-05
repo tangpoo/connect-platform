@@ -1,4 +1,4 @@
-package com.cnt.paymentservice.repository;
+package com.cnt.paymentservice.infrastructure.repository;
 
 import com.cnt.paymentservice.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;

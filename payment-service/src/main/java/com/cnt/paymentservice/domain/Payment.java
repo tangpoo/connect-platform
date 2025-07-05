@@ -29,6 +29,8 @@ public class Payment {
 
     private int discountAmount;
 
+    private PaymentGateway paymentGateway;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
@@ -42,7 +44,8 @@ public class Payment {
         int paidAmount,
         int discountAmount,
         Member member,
-        Coupon coupon
+        Coupon coupon,
+        PaymentGateway paymentGateway
     ) {
         this.paymentKey = paymentKey;
         this.orderId = orderId;
@@ -51,5 +54,6 @@ public class Payment {
         this.discountAmount = discountAmount;
         this.member = member;
         this.coupon = coupon;
+        this.paymentGateway = paymentGateway;
     }
 }

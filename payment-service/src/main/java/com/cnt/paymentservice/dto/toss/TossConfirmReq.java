@@ -1,9 +1,9 @@
 package com.cnt.paymentservice.dto.toss;
 
 public record TossConfirmReq(
+    Long   memberId,
     String paymentKey,
     String orderId,
-    int amount
-) {
-
-}
+    int    chargeAmount,
+    String couponCode
+) {}

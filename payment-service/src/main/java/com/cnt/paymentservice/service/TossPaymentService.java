@@ -3,9 +3,9 @@ package com.cnt.paymentservice.service;
 import com.cnt.paymentservice.domain.Coupon;
 import com.cnt.paymentservice.domain.PaymentGateway;
 import com.cnt.paymentservice.dto.PaymentRes;
-import com.cnt.paymentservice.dto.kakao.KakaoApproveReq;
-import com.cnt.paymentservice.dto.kakao.KakaoApproveRes;
-import com.cnt.paymentservice.infrastructure.KakaoPayClient;
+import com.cnt.paymentservice.dto.toss.TossConfirmReq;
+import com.cnt.paymentservice.dto.toss.TossPaymentRes;
+import com.cnt.paymentservice.infrastructure.TossClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,24 +13,24 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class KakaoPaymentService {
+public class TossPaymentService {
 
-    private final KakaoPayClient kakaoClient;
+    private final TossClient tossClient;
     private final PaymentService paymentService;
     private final CouponService couponService;
 
-    public PaymentRes approve(KakaoApproveReq req) {
-        KakaoApproveRes kakaoRes = kakaoClient.approve(req);
+    public PaymentRes confirm(TossConfirmReq req) {
+        TossPaymentRes tossRes = tossClient.confirm(req);
 
         Coupon coupon = couponService.findIfPresent(req.couponCode(), req.memberId());
-        int discount = (coupon != null) ? coupon.calcDiscount(kakaoRes.amount().total()) : 0;
+        int discount = (coupon != null) ? coupon.calcDiscount(req.chargeAmount()) : 0;
 
         return paymentService.process(
-            PaymentGateway.KAKAO,
-            kakaoRes.tid(),
-            kakaoRes.partnerOrderId(),
+            PaymentGateway.TOSS,
+            tossRes.paymentKey(),
+            tossRes.orderId(),
             req.memberId(),
-            kakaoRes.amount().total() + discount, // 원래 충전 포인트
+            req.chargeAmount(),
             discount,
             coupon);
     }

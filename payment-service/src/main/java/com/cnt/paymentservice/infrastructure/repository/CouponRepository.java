@@ -1,4 +1,4 @@
-package com.cnt.paymentservice.repository;
+package com.cnt.paymentservice.infrastructure.repository;
 
 import com.cnt.paymentservice.domain.Coupon;
 import com.cnt.paymentservice.domain.Member;
@@ -13,4 +13,6 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
     Optional<Coupon> findByCodeAndMember(String code, Member member);
 
     List<Coupon> findAllByMember(Member member);
+
+    Optional<Coupon> findByCodeAndMemberId(String code, Long memberId);
 }

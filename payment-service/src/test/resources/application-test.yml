@@ -8,3 +8,9 @@ spring:
     hibernate:
       ddl-auto: create-drop
     database-platform: org.hibernate.dialect.H2Dialect
+
+payments:
+  toss:
+    secret_key: "testKey..."
+  kakao:
+    admin_key: "testKey..."
