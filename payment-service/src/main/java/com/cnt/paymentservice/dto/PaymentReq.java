@@ -4,7 +4,8 @@ public record PaymentReq(
     Long memberId,
     String paymentKey,
     String orderId,
-    int amount
+    int chargeAmount,
+    String couponCode
 ) {
 
 }

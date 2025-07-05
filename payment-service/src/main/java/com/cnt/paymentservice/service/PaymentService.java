@@ -1,5 +1,6 @@
 package com.cnt.paymentservice.service;
 
+import com.cnt.paymentservice.domain.Coupon;
 import com.cnt.paymentservice.domain.Member;
 import com.cnt.paymentservice.domain.Payment;
 import com.cnt.paymentservice.dto.PaymentReq;
@@ -15,23 +16,27 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PaymentService {
 
     private final MemberRepository memberRepository;
     private final PaymentRepository paymentRepository;
     private final TossClientService tossClientService;
+    private final CouponService couponService;
 
-    @Transactional
     public PaymentRes confirmPayment(PaymentReq req) {
         Member member = getMember(req.memberId());
+        Coupon coupon = getValidCoupon(req.couponCode(), member);
+        int discountAmount = calculateDiscount(req.chargeAmount(), coupon);
+        int paidAmount = req.chargeAmount() - discountAmount;
 
-        TossConfirmReq confirmReq = new TossConfirmReq(
-            req.paymentKey(), req.orderId(), req.amount());
-        TossPaymentRes res = tossClientService.tossConfirmPayment(confirmReq);
+        TossPaymentRes res = confirmWithToss(req, paidAmount);
+        validateNotDuplicated(res.paymentKey());
 
-        validateTossResponse(res, req.amount());
+        Payment payment = savePayment(req.chargeAmount(), paidAmount, discountAmount, member, coupon, res);
+        member.chargePoint(payment.getChargeAmount());
 
-        return saveAndCharge(member, res);
+        return new PaymentRes(payment.getId(), member.getPoint(), discountAmount, paidAmount);
     }
 
     private Member getMember(Long memberId) {
@@ -48,17 +53,34 @@ public class PaymentService {
         }
     }
 
-    private PaymentRes saveAndCharge(Member member, TossPaymentRes res) {
+    private Coupon getValidCoupon(String code, Member member) {
+        if (code == null || code.isBlank()) return null;
+        return couponService.validateForUse(code, member);
+    }
 
-        if (paymentRepository.existsByPaymentKey(res.paymentKey())) {
+    private int calculateDiscount(int chargeAmount, Coupon coupon) {
+        return (coupon != null) ? coupon.calcDiscount(chargeAmount) : 0;
+    }
+
+    private TossPaymentRes confirmWithToss(PaymentReq req, int expectedAmount) {
+        TossConfirmReq confirmReq = new TossConfirmReq(req.paymentKey(), req.orderId(), expectedAmount);
+        TossPaymentRes res = tossClientService.tossConfirmPayment(confirmReq);
+        validateTossResponse(res, expectedAmount);
+        return res;
+    }
+
+    private void validateNotDuplicated(String paymentKey) {
+        if (paymentRepository.existsByPaymentKey(paymentKey)) {
             throw new IllegalStateException("이미 처리된 결제입니다.");
         }
+    }
 
-        Payment pay = paymentRepository.save(
-            new Payment(res.paymentKey(), res.orderId(), res.totalAmount(), member));
-
-        member.chargePoint(res.totalAmount());
-
-        return new PaymentRes(pay.getId(), member.getPoint());
+    private Payment savePayment(int chargeAmount, int paidAmount, int discountAmount,
+        Member member, Coupon coupon, TossPaymentRes res) {
+        Payment pay = new Payment(
+            res.paymentKey(), res.orderId(),
+            chargeAmount, paidAmount, discountAmount,
+            member, coupon);
+        return paymentRepository.save(pay);
     }
 }

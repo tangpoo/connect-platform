@@ -23,16 +23,33 @@ public class Payment {
 
     private String orderId;
 
-    private int amount;
+    private int chargeAmount;
+
+    private int paidAmount;
+
+    private int discountAmount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
-    public Payment(final String paymentKey, final String orderId, final int amount,
-        final Member member) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Coupon coupon;
+
+    public Payment(
+        String paymentKey,
+        String orderId,
+        int chargeAmount,
+        int paidAmount,
+        int discountAmount,
+        Member member,
+        Coupon coupon
+    ) {
         this.paymentKey = paymentKey;
         this.orderId = orderId;
-        this.amount = amount;
+        this.chargeAmount = chargeAmount;
+        this.paidAmount = paidAmount;
+        this.discountAmount = discountAmount;
         this.member = member;
+        this.coupon = coupon;
     }
 }
