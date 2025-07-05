@@ -1,7 +1,6 @@
 package com.cnt.paymentservice.service;
 
 import com.cnt.paymentservice.domain.Coupon;
-import com.cnt.paymentservice.domain.CouponType;
 import com.cnt.paymentservice.domain.Member;
 import com.cnt.paymentservice.dto.CouponIssueReq;
 import com.cnt.paymentservice.dto.CouponRes;
@@ -45,7 +44,9 @@ public class CouponService {
             .orElseThrow(() -> new EntityNotFoundException("회원이 존재하지 않습니다."));
 
         couponRepository.findByCodeAndMember(req.code(), member)
-            .ifPresent(c -> { throw new IllegalStateException("이미 발급된 쿠폰입니다."); });
+            .ifPresent(c -> {
+                throw new IllegalStateException("이미 발급된 쿠폰입니다.");
+            });
 
         Coupon coupon = new Coupon(
             req.code(),

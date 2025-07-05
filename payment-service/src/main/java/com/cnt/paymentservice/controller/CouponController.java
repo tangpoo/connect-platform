@@ -1,6 +1,5 @@
 package com.cnt.paymentservice.controller;
 
-import com.cnt.paymentservice.domain.Coupon;
 import com.cnt.paymentservice.dto.CouponIssueReq;
 import com.cnt.paymentservice.dto.CouponRes;
 import com.cnt.paymentservice.service.CouponService;

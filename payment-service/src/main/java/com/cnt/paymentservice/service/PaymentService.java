@@ -33,7 +33,8 @@ public class PaymentService {
         TossPaymentRes res = confirmWithToss(req, paidAmount);
         validateNotDuplicated(res.paymentKey());
 
-        Payment payment = savePayment(req.chargeAmount(), paidAmount, discountAmount, member, coupon, res);
+        Payment payment = savePayment(req.chargeAmount(), paidAmount, discountAmount, member,
+            coupon, res);
         member.chargePoint(payment.getChargeAmount());
 
         return new PaymentRes(payment.getId(), member.getPoint(), discountAmount, paidAmount);
@@ -54,7 +55,9 @@ public class PaymentService {
     }
 
     private Coupon getValidCoupon(String code, Member member) {
-        if (code == null || code.isBlank()) return null;
+        if (code == null || code.isBlank()) {
+            return null;
+        }
         return couponService.validateForUse(code, member);
     }
 
@@ -63,7 +66,8 @@ public class PaymentService {
     }
 
     private TossPaymentRes confirmWithToss(PaymentReq req, int expectedAmount) {
-        TossConfirmReq confirmReq = new TossConfirmReq(req.paymentKey(), req.orderId(), expectedAmount);
+        TossConfirmReq confirmReq = new TossConfirmReq(req.paymentKey(), req.orderId(),
+            expectedAmount);
         TossPaymentRes res = tossClientService.tossConfirmPayment(confirmReq);
         validateTossResponse(res, expectedAmount);
         return res;
