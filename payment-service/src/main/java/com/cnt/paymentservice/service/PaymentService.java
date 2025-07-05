@@ -5,8 +5,8 @@ import com.cnt.paymentservice.domain.Member;
 import com.cnt.paymentservice.domain.Payment;
 import com.cnt.paymentservice.dto.PaymentReq;
 import com.cnt.paymentservice.dto.PaymentRes;
-import com.cnt.paymentservice.dto.TossConfirmReq;
-import com.cnt.paymentservice.dto.TossPaymentRes;
+import com.cnt.paymentservice.dto.toss.TossConfirmReq;
+import com.cnt.paymentservice.dto.toss.TossPaymentRes;
 import com.cnt.paymentservice.repository.MemberRepository;
 import com.cnt.paymentservice.repository.PaymentRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -68,7 +68,7 @@ public class PaymentService {
     private TossPaymentRes confirmWithToss(PaymentReq req, int expectedAmount) {
         TossConfirmReq confirmReq = new TossConfirmReq(req.paymentKey(), req.orderId(),
             expectedAmount);
-        TossPaymentRes res = tossClientService.tossConfirmPayment(confirmReq);
+        TossPaymentRes res = tossClientService.confirm(confirmReq);
         validateTossResponse(res, expectedAmount);
         return res;
     }

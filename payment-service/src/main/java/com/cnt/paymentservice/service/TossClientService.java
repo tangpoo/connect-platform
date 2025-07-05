@@ -1,7 +1,7 @@
 package com.cnt.paymentservice.service;
 
-import com.cnt.paymentservice.dto.TossConfirmReq;
-import com.cnt.paymentservice.dto.TossPaymentRes;
+import com.cnt.paymentservice.dto.toss.TossConfirmReq;
+import com.cnt.paymentservice.dto.toss.TossPaymentRes;
 import java.util.Base64;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +22,7 @@ public class TossClientService {
     @Value("${payments.toss.test_secret_api_key}")
     private String tossSecretKey;
 
-    public TossPaymentRes tossConfirmPayment(TossConfirmReq req) {
+    public TossPaymentRes confirm(TossConfirmReq req) {
         HttpEntity<TossConfirmReq> requestHttpEntity = new HttpEntity<>(req, buildHeaders());
 
         try {

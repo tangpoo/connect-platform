@@ -1,7 +1,7 @@
 package com.cnt.paymentservice.controller;
 
-import com.cnt.paymentservice.dto.CouponIssueReq;
-import com.cnt.paymentservice.dto.CouponRes;
+import com.cnt.paymentservice.dto.coupon.CouponIssueReq;
+import com.cnt.paymentservice.dto.coupon.CouponRes;
 import com.cnt.paymentservice.service.CouponService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

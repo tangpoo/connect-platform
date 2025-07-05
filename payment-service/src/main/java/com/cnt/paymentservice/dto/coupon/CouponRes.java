@@ -1,4 +1,4 @@
-package com.cnt.paymentservice.dto;
+package com.cnt.paymentservice.dto.coupon;
 
 import com.cnt.paymentservice.domain.Coupon;
 import com.cnt.paymentservice.domain.CouponType;

@@ -2,8 +2,8 @@ package com.cnt.paymentservice.service;
 
 import com.cnt.paymentservice.domain.Coupon;
 import com.cnt.paymentservice.domain.Member;
-import com.cnt.paymentservice.dto.CouponIssueReq;
-import com.cnt.paymentservice.dto.CouponRes;
+import com.cnt.paymentservice.dto.coupon.CouponIssueReq;
+import com.cnt.paymentservice.dto.coupon.CouponRes;
 import com.cnt.paymentservice.repository.CouponRepository;
 import com.cnt.paymentservice.repository.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;

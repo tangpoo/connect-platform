@@ -8,8 +8,8 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.when;
 
-import com.cnt.paymentservice.dto.TossConfirmReq;
-import com.cnt.paymentservice.dto.TossPaymentRes;
+import com.cnt.paymentservice.dto.toss.TossConfirmReq;
+import com.cnt.paymentservice.dto.toss.TossPaymentRes;
 import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -51,7 +51,7 @@ class TossClientServiceTests {
             .thenReturn(tossPaymentRes);
 
         // when
-        TossPaymentRes res = tossClientService.tossConfirmPayment(req);
+        TossPaymentRes res = tossClientService.confirm(req);
 
         // then
         assertThat(res.status()).isEqualTo("DONE");
@@ -75,7 +75,7 @@ class TossClientServiceTests {
             .thenThrow(ex401);
 
         // then
-        assertThatThrownBy(() -> tossClientService.tossConfirmPayment(req))
+        assertThatThrownBy(() -> tossClientService.confirm(req))
             .isInstanceOf(IllegalStateException.class)
             .hasMessageContaining("토스 인증 실패");
     }
@@ -95,7 +95,7 @@ class TossClientServiceTests {
             .thenThrow(ex404);
 
         // then
-        assertThatThrownBy(() -> tossClientService.tossConfirmPayment(req))
+        assertThatThrownBy(() -> tossClientService.confirm(req))
             .isInstanceOf(IllegalStateException.class)
             .hasMessageContaining("해당 결제 정보가 존재하지 않습니다");
     }

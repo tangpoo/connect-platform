@@ -13,7 +13,7 @@ import com.cnt.paymentservice.domain.Member;
 import com.cnt.paymentservice.domain.Payment;
 import com.cnt.paymentservice.dto.PaymentReq;
 import com.cnt.paymentservice.dto.PaymentRes;
-import com.cnt.paymentservice.dto.TossPaymentRes;
+import com.cnt.paymentservice.dto.toss.TossPaymentRes;
 import com.cnt.paymentservice.repository.MemberRepository;
 import com.cnt.paymentservice.repository.PaymentRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -45,7 +45,7 @@ class PaymentServiceTests {
         PaymentReq req = new PaymentReq(memberId, "payKey", "order-1", 10_000, null);
 
         given(memberRepository.findById(memberId)).willReturn(Optional.of(member));
-        given(tossClientService.tossConfirmPayment(any()))
+        given(tossClientService.confirm(any()))
             .willReturn(new TossPaymentRes("payKey", "order-1", 10_000, "DONE"));
         given(paymentRepository.existsByPaymentKey("payKey")).willReturn(false);
         given(paymentRepository.save(any(Payment.class)))
@@ -72,7 +72,7 @@ class PaymentServiceTests {
         given(memberRepository.findById(memberId)).willReturn(Optional.of(member));
         given(couponService.validateForUse("SAVE20", member)).willReturn(coupon);
 
-        given(tossClientService.tossConfirmPayment(any()))
+        given(tossClientService.confirm(any()))
             .willReturn(new TossPaymentRes("payKey", "order-2", 8_000, "DONE"));
 
         given(paymentRepository.existsByPaymentKey("payKey")).willReturn(false);
@@ -105,7 +105,7 @@ class PaymentServiceTests {
     void confirm_payment_should_throw_when_toss_response_null() {
         PaymentReq req = new PaymentReq(memberId, "payKey", "order-1", 10_000, null);
         given(memberRepository.findById(memberId)).willReturn(Optional.of(member));
-        given(tossClientService.tossConfirmPayment(any())).willReturn(null);
+        given(tossClientService.confirm(any())).willReturn(null);
 
         assertThatThrownBy(() -> paymentService.confirmPayment(req))
             .isInstanceOf(IllegalStateException.class)
@@ -116,7 +116,7 @@ class PaymentServiceTests {
     void confirm_payment_should_throw_when_status_not_done() {
         PaymentReq req = new PaymentReq(memberId, "payKey", "order-1", 10_000, null);
         given(memberRepository.findById(memberId)).willReturn(Optional.of(member));
-        given(tossClientService.tossConfirmPayment(any()))
+        given(tossClientService.confirm(any()))
             .willReturn(new TossPaymentRes("payKey", "order-1", 10_000, "CANCELED"));
 
         assertThatThrownBy(() -> paymentService.confirmPayment(req))
@@ -128,7 +128,7 @@ class PaymentServiceTests {
     void confirm_payment_should_throw_when_amount_mismatch() {
         PaymentReq req = new PaymentReq(memberId, "payKey", "order-1", 10_000, null);
         given(memberRepository.findById(memberId)).willReturn(Optional.of(member));
-        given(tossClientService.tossConfirmPayment(any()))
+        given(tossClientService.confirm(any()))
             .willReturn(new TossPaymentRes("payKey", "order-1", 5_000, "DONE")); // 5 000 ≠ 10 000
 
         assertThatThrownBy(() -> paymentService.confirmPayment(req))
@@ -140,7 +140,7 @@ class PaymentServiceTests {
     void confirm_payment_should_throw_when_duplicate_payment_key() {
         PaymentReq req = new PaymentReq(memberId, "payKey", "order-1", 10_000, null);
         given(memberRepository.findById(memberId)).willReturn(Optional.of(member));
-        given(tossClientService.tossConfirmPayment(any()))
+        given(tossClientService.confirm(any()))
             .willReturn(new TossPaymentRes("payKey", "order-1", 10_000, "DONE"));
         given(paymentRepository.existsByPaymentKey("payKey")).willReturn(true);
 

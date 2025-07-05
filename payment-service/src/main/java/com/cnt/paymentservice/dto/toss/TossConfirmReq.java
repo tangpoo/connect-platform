@@ -1,4 +1,4 @@
-package com.cnt.paymentservice.dto;
+package com.cnt.paymentservice.dto.toss;
 
 public record TossConfirmReq(
     String paymentKey,
