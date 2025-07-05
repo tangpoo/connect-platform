@@ -12,6 +12,7 @@ public record CouponRes(
     boolean used,
     LocalDateTime expiresAt
 ) {
+
     public static CouponRes from(Coupon c) {
         return new CouponRes(
             c.getCode(), c.getType(), c.getDiscountValue(),
