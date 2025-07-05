@@ -19,7 +19,6 @@ public class PaymentController {
 
     @PostMapping("/confirm")
     public ResponseEntity<PaymentRes> confirmPayment(@RequestBody PaymentReq req) {
-        PaymentRes res = paymentService.confirmPayment(req);
-        return ResponseEntity.ok(res);
+        return ResponseEntity.ok(paymentService.confirmPayment(req));
     }
 }
