@@ -1,6 +1,7 @@
 package com.cnt.paymentservice.controller;
 
 
+import com.cnt.paymentservice.dto.PaymentRes;
 import com.cnt.paymentservice.dto.kakao.KakaoApproveReq;
 import com.cnt.paymentservice.dto.kakao.KakaoApproveRes;
 import com.cnt.paymentservice.service.KakaoPaymentService;
@@ -19,7 +20,7 @@ public class KakaoPaymentController {
     private final KakaoPaymentService kakaoPayService;
 
     @PostMapping("/apporve")
-    public ResponseEntity<KakaoApproveRes> approve(@RequestBody KakaoApproveReq req) {
+    public ResponseEntity<PaymentRes> approve(@RequestBody KakaoApproveReq req) {
         return ResponseEntity.ok(kakaoPayService.approve(req));
     }
 }
