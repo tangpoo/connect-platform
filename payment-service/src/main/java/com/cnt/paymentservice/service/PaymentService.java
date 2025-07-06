@@ -5,6 +5,8 @@ import com.cnt.paymentservice.domain.Member;
 import com.cnt.paymentservice.domain.Payment;
 import com.cnt.paymentservice.domain.PaymentGateway;
 import com.cnt.paymentservice.dto.PaymentRes;
+import com.cnt.paymentservice.dto.kakao.KakaoApproveReq;
+import com.cnt.paymentservice.dto.kakao.KakaoApproveRes;
 import com.cnt.paymentservice.infrastructure.repository.MemberRepository;
 import com.cnt.paymentservice.infrastructure.repository.PaymentRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -61,5 +63,12 @@ public class PaymentService {
             discountAmount,
             paidAmount
         );
+    }
+
+    public void validateAmountMatches(int totalAmount, int discount, int resultAmount) {
+        int expectedPaidAmount = totalAmount - discount;
+        if (resultAmount != expectedPaidAmount) {
+            throw new IllegalStateException("결제 금액 불일치");
+        }
     }
 }

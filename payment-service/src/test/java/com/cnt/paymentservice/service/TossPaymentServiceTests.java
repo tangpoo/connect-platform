@@ -1,7 +1,7 @@
 package com.cnt.paymentservice.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -24,15 +24,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class TossPaymentServiceTests {
 
+    final Long memberId = 1L;
     @Mock
     TossClient tossClient;
-    @Mock CouponService couponService;
-    @Mock PaymentService paymentService;
-
+    @Mock
+    CouponService couponService;
+    @Mock
+    PaymentService paymentService;
     @InjectMocks
     TossPaymentService tossPaymentService;
-
-    final Long memberId = 1L;
 
     @Test
     void confirm_success_without_coupon() {

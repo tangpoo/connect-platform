@@ -62,22 +62,38 @@ class PaymentServiceTests {
     }
 
     @Test
-    void should_throw_when_member_not_found() {
+    void process_should_throw_when_member_not_found() {
+        // given
         given(memberRepository.findById(99L)).willReturn(Optional.empty());
 
+        // when + then
         assertThatThrownBy(() -> paymentService.process(
             PaymentGateway.TOSS, "pg", "order", 99L, 1_000, 0, null))
             .isInstanceOf(EntityNotFoundException.class);
     }
 
     @Test
-    void should_throw_on_duplicate_payment_key() {
+    void process_should_throw_on_duplicate_payment_key() {
+        // given
         given(memberRepository.findById(1L)).willReturn(Optional.of(member));
         given(paymentRepository.existsByPaymentKey("dupKey")).willReturn(true);
 
+        // when + then
         assertThatThrownBy(() -> paymentService.process(
             PaymentGateway.TOSS, "dupKey", "order", 1L, 1_000, 0, null))
             .isInstanceOf(IllegalStateException.class)
             .hasMessageContaining("이미 처리");
+    }
+
+    @Test
+    void should_throw_amount_miss_match() {
+        // given
+        int totalAmount = 10000;
+        int discount = 4000;
+        int resultAmount = 8000;
+
+        // when + then
+        assertThatThrownBy(() -> paymentService.validateAmountMatches(totalAmount, discount, resultAmount))
+            .isInstanceOf(IllegalStateException.class).hasMessageContaining("결제 금액 불일치");
     }
 }
