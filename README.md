@@ -42,6 +42,7 @@ Connect Platform은 회원 정보 관리, 포인트 기반 결제 기능, 전문
 - 프론트엔드에서 Toss 결제 요청
 - 결제 성공 후 받은 `paymentKey`, `orderId`, `amount`를 서버에 전송
 - `payment-service`에서 Toss로 결제 승인 요청 → 성공 시 포인트 적립
+
 **KakaoPay 결제 승인 API**
 - 프론트엔드에서 KakaoPay 결제 요청
 - 결제 성공 후 받은 `cid`, `tid`, `partnerOrderId`, `partenerUserId`, `pgToken`를 서버에 전송
