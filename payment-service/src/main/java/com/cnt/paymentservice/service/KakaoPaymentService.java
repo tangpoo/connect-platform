@@ -25,12 +25,14 @@ public class KakaoPaymentService {
         Coupon coupon = couponService.findIfPresent(req.couponCode(), req.memberId());
         int discount = (coupon != null) ? coupon.calcDiscount(kakaoRes.amount().total()) : 0;
 
+        paymentService.validateAmountMatches(req.totalAmount(), discount, kakaoRes.amount().total());
+
         return paymentService.process(
             PaymentGateway.KAKAO,
             kakaoRes.tid(),
             kakaoRes.partnerOrderId(),
             req.memberId(),
-            kakaoRes.amount().total() + discount, // 원래 충전 포인트
+            kakaoRes.amount().total() + discount,
             discount,
             coupon);
     }

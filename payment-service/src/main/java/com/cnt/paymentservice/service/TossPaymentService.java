@@ -25,6 +25,13 @@ public class TossPaymentService {
         Coupon coupon = couponService.findIfPresent(req.couponCode(), req.memberId());
         int discount = (coupon != null) ? coupon.calcDiscount(req.chargeAmount()) : 0;
 
+        paymentService.validateAmountMatches(req.chargeAmount(), discount, tossRes.totalAmount());
+
+        int expectedPaidAmount = req.chargeAmount() - discount;
+        if (tossRes.totalAmount() != expectedPaidAmount) {
+            throw new IllegalStateException("결제 금액 불일치");
+        }
+
         return paymentService.process(
             PaymentGateway.TOSS,
             tossRes.paymentKey(),
